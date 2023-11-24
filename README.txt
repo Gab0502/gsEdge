@@ -69,3 +69,10 @@ Suporte Contínuo:
 
 Após a configuração inicial, a equipe médica e de suporte da SanaVita está disponível para fornecer assistência contínua, esclarecer dúvidas e garantir uma transição suave para o uso do SmartMeds.
 Essa configuração inicial é crucial para garantir que o SmartMeds seja uma ferramenta eficaz no gerenciamento de medicamentos, fornecendo lembretes precisos e personalizados para cada paciente. Agradecemos por escolher SanaVita e SmartMeds.
+
+1ESPX
+
+Enricco Rossi de Souza Carvalho Mirandai - RM 551717
+
+Gabriel Marquez Trevisan - RM 99227
+
