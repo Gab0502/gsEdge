@@ -1,0 +1,123 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <EspMQTTClient.h>
+#include <ArduinoJson.h>
+
+#define APP_NAME "IoT Tago+Wifi"
+#define APP_VERSION "1.0.0"
+#define SEPARATOR_LINE "****************************************************"
+
+EspMQTTClient client{
+  "Wokwi-GUEST", // SSID do WiFi
+  "",            // Senha do WiFi
+  "mqtt.tago.io",  // Endereço do servidor MQTT
+  "Default",       // Nome de usuário MQTT
+  "0080bb2c-7570-41ae-8917-51dc942cdf46", // Token do dispositivo MQTT
+  "Eduardo Coelho da Silva", // Nome do dispositivo MQTT
+  1883             // Porta de comunicação MQTT
+};
+void onConnectionEstablished() {
+  // Ação a ser realizada quando a conexão é estabelecida
+}
+
+
+int lcdColumns = 16;
+int lcdRows = 2;
+int buzzer = 12;
+int btn = 34;
+
+char dadosJson[100];
+
+
+LiquidCrystal_I2C lcd(0x27, lcdColumns, lcdRows);
+
+String datas[] = {"23/11/2023", "24/11/2023", "25/11/2023"};
+String remedios[] = {"Paracetamol", "Ibuprofeno", "Aspirina"};
+
+int numeroIteracao = 0;
+
+unsigned long tempoInicial;
+const unsigned long tempoMaximoBotao = 10000; // 10 segundos
+
+bool remedioConsumido = false;
+
+void setup() {
+  Serial.begin(115200);
+  lcd.init();
+  lcd.backlight();
+  tempoInicial = millis();
+}
+
+void loop() {
+  if (numeroIteracao >= 3) {
+    lcd.clear();
+    while(true){
+    lcd.setCursor(0, 0);
+    lcd.print("Todos remedios");
+    lcd.setCursor(0, 1);
+    lcd.print("Foram tomados!");
+    }
+  }
+
+  String data = datas[numeroIteracao];
+  String nomeRemedio = remedios[numeroIteracao];
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Data: " + data);
+  lcd.setCursor(0, 1);
+  lcd.print("Remedio: " + nomeRemedio);
+
+  iniciarBuzzer();
+
+  tempoInicial = millis(); // Reiniciar o tempo inicial a cada iteração
+
+  while (millis() - tempoInicial <= tempoMaximoBotao) {
+    if (digitalRead(btn) == HIGH) {
+      noTone(buzzer);
+      remedioConsumido = true;
+      exibirMensagem("Remedio tomado"," " , 5000);
+      send_status(1);
+      break;
+    }
+    tone(buzzer, 1000);
+    delay(10);
+  }
+
+  if (!remedioConsumido) {
+    noTone(buzzer);
+    exibirMensagem("Remedio","nao tomado", 5000);
+    send_status(0);
+
+  }
+
+  avancarIteracao();
+}
+
+void iniciarBuzzer() {
+  tone(buzzer, 1000);
+}
+
+void exibirMensagem(String mensagem,String mensagem2, int tempo) {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print(mensagem);
+  lcd.setCursor(0,1);
+  lcd.print(mensagem2);
+  delay(tempo);
+}
+
+void avancarIteracao() {
+  numeroIteracao++;
+  remedioConsumido = false; // Resetar a variável para a próxima iteração
+}
+void send_status(int statusRemedio) {
+  StaticJsonDocument<300> documentoJson;
+  documentoJson["variable"] = "Remedio";
+  documentoJson["value"] = statusRemedio;
+  serializeJson(documentoJson, dadosJson, sizeof(dadosJson));
+  Serial.println("Enviando dados de volume");
+  Serial.println(dadosJson);
+  client.publish("sanaVita", dadosJson);
+  client.loop();
+}
