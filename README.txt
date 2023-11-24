@@ -1,7 +1,7 @@
 
 Readme - SanaVita Health Management Device
 Problema de Saúde Abordado:
-O SanaVita Health Management Device surge como uma solução crucial para um problema persistente e sensível na área da saúde: a falta de controle eficaz sobre como os pacientes estão seguindo suas prescrições medicamentosas. A SanaVita reconhece que, muitas vezes, os médicos enfrentam desafios significativos para obter informações precisas sobre a adesão dos pacientes ao tratamento, resultando em lacunas na gestão da saúde.
+O SanaVita surge como uma solução crucial para um problema persistente e sensível na área da saúde: a falta de controle eficaz sobre como os pacientes estão seguindo suas prescrições medicamentosas. A SanaVita reconhece que, muitas vezes, os médicos enfrentam desafios significativos para obter informações precisas sobre a adesão dos pacientes ao tratamento, resultando em lacunas na gestão da saúde.
 
 
 Desafios na Adesão ao Tratamento:
